@@ -9,7 +9,10 @@ ball = nil
 next_player_1 = true
 
 function love.load()
-    -- Initialize actors
+    -- Sets the random seed
+    math.randomseed( os.time() )
+    local width
+    local height
     width, height = player1:getDimensions()
     y = love.graphics.getHeight()/2 - height/2
 
@@ -103,10 +106,16 @@ function setBallInGame( )
     ball:setPosition( love.graphics.getWidth()/2 - ball.size/2, love.graphics.getHeight()/2 - ball.size/2 )
 
     if next_player_1 then
-        ball:setPosition( love.graphics.getWidth()/2 - ball.size/2, love.graphics.getHeight()/2 - ball.size/2 )
+        local _, y = player1:getPosition()
+        local _, height = player1:getDimensions()
+        y = y + height/2
+        ball:setPosition( love.graphics.getWidth()/2 - ball.size/2, y - ball.size/2)
         ball:setSpeed( ball.speed_starting, ball.speed_starting )
     else
-        ball:setPosition( love.graphics.getWidth()/2 + ball.size/2, love.graphics.getHeight()/2 - ball.size/2 )
-        ball:setSpeed( -ball.speed_starting, ball.speed_starting )
+        local _, y = player2:getPosition()
+        local _, heigh = player2:getDimensions()
+        y = y + height/2
+        ball:setPosition( love.graphics.getWidth()/2 + ball.size/2, y - ball.size/2)
+        ball:setSpeed( -ball.speed_starting*math.random(0.9, 1.4), ball.speed_starting*math.random(0.9, 1.4) )
     end
 end
