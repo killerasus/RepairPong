@@ -2,51 +2,44 @@
 require "ball"
 require "player"
 
--- Declare actors
-player1 = Player:new()
-player2 = Player:new()
-ball = nil
-next_player_1 = true
+-- State machine
+State = 0 
+-- 0 -- Menu
+-- 1 -- Game
+-- 2 -- Game Over
+-- 3 -- Creditos
+
+MenuState = 0
+-- 0 -- Play
+-- 1 -- Credits
+
 
 function love.load()
     -- Sets the random seed
     math.randomseed( os.time() )
-    local width
-    local height
-    width, height = player1:getDimensions()
-    y = love.graphics.getHeight()/2 - height/2
-
-    player1:setPosition( 20, y )
-   	player2:setPosition( love.graphics.getWidth() - width - 20 , y )
-   	player2:setUpKey( "i" )
-   	player2:setDownKey( "k" )
-    player2:setRepairKey( "m" )
 end
 
 function love.draw()
-    drawScores()
-    drawField()
-    player1:draw()
-    player2:draw()
-
-    if (ball) then
-	   ball:draw()
+    if (State == 0) then
+        drawMenu()
+    elseif (State == 1) then
+        drawGame()
+    elseif (State == 2) then
+        -- drawGameOver()
+    elseif (State == 3) then
+        drawCredits()
     end
 end
 
 function love.update(dt)
-    player1:update( dt )
-    player2:update( dt )
-    
-    if (ball) then
-        ball:update( dt )
-        ball:checkPlayerCollision( player1 )
-        ball:checkPlayerCollision( player2 )
-        checkBallWallCollision( )
-    else
-        if love.keyboard.isDown("space") then
-            setBallInGame()
-        end
+    if (State == 0) then
+        menuUpdate()
+    elseif (State == 1) then
+        gameUpdate( dt )
+    elseif (State == 2) then
+        -- gameOverUpdate(dt)
+    elseif (State == 3) then
+        -- creditsUpdate(dt))
     end
 end
 
@@ -113,9 +106,134 @@ function setBallInGame( )
         ball:setSpeed( ball.speed_starting, ball.speed_starting )
     else
         local _, y = player2:getPosition()
-        local _, heigh = player2:getDimensions()
+        local _, height = player2:getDimensions()
         y = y + height/2
         ball:setPosition( love.graphics.getWidth()/2 + ball.size/2, y - ball.size/2)
         ball:setSpeed( -ball.speed_starting*math.random(0.9, 1.4), ball.speed_starting*math.random(0.9, 1.4) )
     end
+end
+
+function menuUpdate( )
+    if(MenuState == 0) then
+        if love.keyboard.isDown("down") then
+            MenuState = 1
+        elseif love.keyboard.isDown("return") then
+            unloadMenu()
+            loadGame()
+        end
+    elseif(MenuState == 1) then
+        if love.keyboard.isDown("up") then
+            MenuState = 0
+        elseif love.keyboard.isDown("return") then
+            unloadMenu()
+            loadCredits()
+        end
+    end
+end
+
+function drawMenu( )
+    love.graphics.setColor(Colors.White)
+    love.graphics.print("Repair Pong", 0, 0, 0, 1)
+
+    local color = {}
+
+    if(MenuState == 0) then
+        color = Colors.Orange
+    else
+        color = Colors.SmokyGray
+    end
+    love.graphics.print({color, "Play"}, 0, 30, 0, 1)
+
+    if(MenuState == 1) then
+        color = Colors.Orange
+    else
+        color = Colors.SmokyGray
+    end
+    love.graphics.print({color, "Credits"}, 0, 60, 0, 1)
+end
+
+function drawGame( )
+    drawScores()
+    drawField()
+    player1:draw()
+    player2:draw()
+
+    if (ball) then
+       ball:draw()
+    end
+end
+
+function gameUpdate( dt )
+    player1:update( dt )
+    player2:update( dt )
+    
+    if (ball) then
+        ball:update( dt )
+        ball:checkPlayerCollision( player1 )
+        ball:checkPlayerCollision( player2 )
+        checkBallWallCollision( )
+    else
+        if love.keyboard.isDown("space") then
+            setBallInGame()
+        end
+    end
+end
+
+function unloadMenu( )
+    MenuState = 0
+end
+
+function loadGame( )
+    State = 1
+
+    -- Declare actors
+    player1 = Player:new()
+    player2 = Player:new()
+    ball = nil
+    next_player_1 = true
+    
+    local width
+    local height
+    width, height = player1:getDimensions()
+    y = love.graphics.getHeight()/2 - height/2
+
+    player1:setPosition( 20, y )
+    player2:setPosition( love.graphics.getWidth() - width - 20 , y )
+    player2:setUpKey( "i" )
+    player2:setDownKey( "k" )
+    player2:setRepairKey( "m" )
+end
+
+function unloadGame( )
+    State = 0
+end
+
+function love.keyreleased(key)
+    if key == "escape" then
+        if (State == 0) then
+            love.event.quit()
+        elseif (State == 1) then
+            unloadGame()
+        elseif (State == 3) then
+            unloadCredits()
+        end
+   end
+end
+
+function loadCredits( )
+    State = 3
+end
+
+function unloadCredits( )
+    State = 0
+end
+
+function drawCredits( )
+    love.graphics.setColor(Colors.White)
+    love.graphics.print("Repair Pong", 0, 0, 0, 1)
+    love.graphics.print("Global Game Jam 2020 - PUC-Rio - Rio de Janeiro, Brazil", 0, 30, 0, 1)
+    love.graphics.print("Programmer and game designer - Bruno Baère", 0, 60, 0, 1)
+    love.graphics.print({Colors.White, "Icon is a derivative work of ", Colors.Green, "Freepik", Colors.White, " (",
+        Colors.Blue, "https://www.flaticon.com/authors/freepik", Colors.White, ") from ", Colors.Green,
+        "Flaticon", Colors.White, " (", Colors.Blue, "https://www.flaticon.com/", Colors.White, ")"}, 0, 90, 0, 1)
 end
