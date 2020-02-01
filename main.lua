@@ -5,43 +5,50 @@ require "player"
 -- Declare actors
 player1 = Player:new()
 player2 = Player:new()
-ball = Ball:new()
+ball = nil
+next_player_1 = true
 
 function love.load()
     -- Initialize actors
-    player1:setPosition( 20, 0 )
+    width, height = player1:getDimensions()
+    y = love.graphics.getHeight()/2 - height/2
 
-    width, height = player2:getDimensions()
-   	player2:setPosition( love.graphics.getWidth() - width - 20 , 0 )
+    player1:setPosition( 20, y )
+   	player2:setPosition( love.graphics.getWidth() - width - 20 , y )
    	player2:setUpKey( "i" )
    	player2:setDownKey( "k" )
-
-    ball:setPosition( 0, 0 )
 
     love.graphics.setColor( player1.color ) -- Using white as the main color
 end
 
-function love.draw()        
+function love.draw()
+    drawScores()
+    drawField()
     player1:draw()
     player2:draw()
-	ball:draw()
 
-	drawScores()
-    drawField()
+    if (ball) then
+	   ball:draw()
+    end
 end
 
 function love.update(dt)
     player1:update( dt )
     player2:update( dt )
-    ball:update( dt )
-
-    checkBallWallCollision( ball )
-
-    ball:checkPlayerCollision( player1 )
-    ball:checkPlayerCollision( player2 )
+    
+    if (ball) then
+        ball:update( dt )
+        ball:checkPlayerCollision( player1 )
+        ball:checkPlayerCollision( player2 )
+        checkBallWallCollision( )
+    else
+        if love.keyboard.isDown("space") then
+            setBallInGame()
+        end
+    end
 end
 
-function checkBallWallCollision( ball )
+function checkBallWallCollision( )
 	x, y = ball:getPosition()
 	speed_x, speed_y = ball:getSpeed()
 	if ball.y < 0 then -- Upper wall collision
@@ -52,18 +59,24 @@ function checkBallWallCollision( ball )
         speed_y = -speed_y
     end
     
-    if ball.x < 0 then -- Left wall collision (Player 1 field)
-    	x = 0
-        speed_x = -speed_x
-        player2.score = player2.score + 1
-    elseif ball.x + ball.size > love.graphics.getWidth() then -- Right wall collision (Player 2 field)
-    	x = love.graphics.getWidth() - ball.size
-    	speed_x = -speed_x
-    	player1.score = player1.score + 1
+    if (ball) then
+        if ball.x < 0 then -- Left wall collision (Player 1 field)
+        	x = 0
+            speed_x = -speed_x
+            player2.score = player2.score + 1
+            ball = nil
+        elseif ball.x + ball.size > love.graphics.getWidth() then -- Right wall collision (Player 2 field)
+        	x = love.graphics.getWidth() - ball.size
+        	speed_x = -speed_x
+        	player1.score = player1.score + 1
+            ball = nil
+        end
     end
 
-    ball:setPosition(x, y)
-    ball:setSpeed(speed_x, speed_y)
+    if( ball ) then
+        ball:setPosition(x, y)
+        ball:setSpeed(speed_x, speed_y)
+    end
 end
 
 function drawScores( )
@@ -81,4 +94,9 @@ function drawField()
         love.graphics.rectangle( 'fill', love.graphics.getWidth()/2 - rect_sizex/2, 
         	i*(space + rect_sizey) + 5, rect_sizex, rect_sizey)
     end
+end
+
+function setBallInGame( )
+    ball = Ball:new()
+    ball:setPosition( love.graphics.getWidth()/2 - ball.size/2, love.graphics.getHeight()/2 - ball.size/2 )
 end

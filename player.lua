@@ -19,6 +19,7 @@ function Player:new( )
 				down = "s"
 			}
 		},
+		speed = 250,
 		health = 100,
 		score = 0,
 		color = { 255, 255, 255, 255 }
@@ -69,11 +70,11 @@ function Player:update( dt )
 	x, y = self:getPosition()
 
 	if love.keyboard.isDown(self.control.keyboard.up) then
-		y = y - 200*dt
+		y = y - self.speed*dt
     end
     
     if love.keyboard.isDown(self.control.keyboard.down) then
-    	y = y + 200*dt
+    	y = y + self.speed*dt
     end
     
     -- Check for boundaries

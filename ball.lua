@@ -11,6 +11,7 @@ function Ball:new( )
 			x = 100,
 			y = 100
 		},
+		speed_increment = 15,
 		size = 16, -- pixels
 		color = { 255, 255, 255, 255 } -- r, g, b, a
 	}
@@ -54,7 +55,11 @@ function Ball:checkPlayerCollision( player )
 
 	if self.x + self.size > player.bar.position.x and self.x < player.bar.position.x + player.bar.width and
 	    self.y + self.size > player.bar.position.y and self.y < player.bar.position.y + player.bar.height then
-	    speed_x = -speed_x
+	    if (speed_x < 0) then 
+	    	speed_x = -(speed_x - self.speed_increment)
+	    else
+	    	speed_x = -(speed_x + self.speed_increment)
+    	end
 	end
 
 	self:setSpeed(speed_x, speed_y)
