@@ -1,5 +1,7 @@
 -- ball.lua
 
+require "colors"
+
 Ball = { }
 Ball.__index = Ball;
 
@@ -13,7 +15,7 @@ function Ball:new( )
 		},
 		speed_increment = 15,
 		size = 16, -- pixels
-		color = { 255, 255, 255, 255 } -- r, g, b, a
+		color = Colors.Green -- r, g, b, a
 	}
 	setmetatable(this, self)
 	return this
@@ -52,9 +54,11 @@ end
 
 function Ball:checkPlayerCollision( player )
 	speed_x, speed_y = self:getSpeed()
+	player_x, player_y = player:getPosition()
+	width, height = player:getDimensions()
 
-	if self.x + self.size > player.bar.position.x and self.x < player.bar.position.x + player.bar.width and
-	    self.y + self.size > player.bar.position.y and self.y < player.bar.position.y + player.bar.height then
+	if self.x + self.size > player_x and self.x < player_x + width and
+	    self.y + self.size > player_y and self.y < player_y + height then
 	    if (speed_x < 0) then 
 	    	speed_x = -(speed_x - self.speed_increment)
 	    else
