@@ -28,7 +28,7 @@ function Player:new( )
 		repair_delay = 2, -- in seconds
 		repair_in_cooldown = false,
 		score = 0,
-		color = Colors.White
+		color = Colors.Green
 	}
 	setmetatable(this, self)
 	return this
@@ -79,15 +79,26 @@ end
 function Player:update( dt )
 	x, y = self:getPosition()
 
+	if not self.repair_in_cooldown then
+		if self.health > 75 then
+			self:setColor( Colors.Green )
+		elseif (self.health < 75 and self.health > 35) then
+			self:setColor( Colors.Yellow )
+		else
+			self:setColor( Colors.Red )
+		end
+	end
+
 	-- For testing cooldown mechanic
 	if self.repair_in_cooldown then
 		self.repair_timer = self.repair_timer + dt
 		if self.repair_timer >= self.repair_delay then
+			self.health = 100
 			self.repair_in_cooldown = false
 			self.repair_timer = 0
-			self:setColor(Colors.White)
+			self:setColor(Colors.Green)
 		end
-		print("Timer " .. self.repair_timer)
+		-- print("Timer " .. self.repair_timer)
 	end
 
 	if love.keyboard.isDown(self.control.keyboard.repair) and not self.repair_in_cooldown then
@@ -113,7 +124,11 @@ function Player:update( dt )
 end
 
 function Player:repair( )
-	self:setColor(Colors.Red)
+	self:setColor(Colors.Blue)
 	self.repair_timer = 0
 	self.repair_in_cooldown = true
+end
+
+function Player:applyDamage( dmg )
+	self.health = self.health - dmg
 end

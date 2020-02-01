@@ -64,7 +64,12 @@ function Ball:checkPlayerCollision( player )
 	    else
 	    	speed_x = -(speed_x + self.speed_increment)
     	end
+    	player:applyDamage( self.computeDamage() )
 	end
 
 	self:setSpeed(speed_x, speed_y)
+end
+
+function Ball:computeDamage( )
+	return 10
 end
