@@ -63,8 +63,10 @@ function Ball:checkPlayerCollision( player )
 	    self.y + self.size > player_y and self.y < player_y + height then
 	    if (speed_x < 0) then 
 	    	speed_x = -(speed_x - self.speed_increment)
+	    	self.x = player_x + width;
 	    else
 	    	speed_x = -(speed_x + self.speed_increment)
+	    	self.x = player_x - self.size
     	end
     	player:applyDamage( self.computeDamage() )
 	end
