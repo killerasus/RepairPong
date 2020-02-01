@@ -13,6 +13,7 @@ function Ball:new( )
 			x = 300,
 			y = 300
 		},
+		speed_starting = 300,
 		speed_increment = 25,
 		speed_limit = 500,
 		size = 16, -- pixels

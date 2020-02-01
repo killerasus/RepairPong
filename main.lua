@@ -64,11 +64,13 @@ function checkBallWallCollision( )
         speed_x = -speed_x
         player2.score = player2.score + 1
         ball = nil
+        next_player_1 = true
     elseif ball.x + ball.size > love.graphics.getWidth() then -- Right wall collision (Player 2 field)
     	x = love.graphics.getWidth() - ball.size
     	speed_x = -speed_x
     	player1.score = player1.score + 1
         ball = nil
+        next_player_1 = false
     end
 
     if (ball) then        
@@ -99,4 +101,12 @@ end
 function setBallInGame( )
     ball = Ball:new()
     ball:setPosition( love.graphics.getWidth()/2 - ball.size/2, love.graphics.getHeight()/2 - ball.size/2 )
+
+    if next_player_1 then
+        ball:setPosition( love.graphics.getWidth()/2 - ball.size/2, love.graphics.getHeight()/2 - ball.size/2 )
+        ball:setSpeed( ball.speed_starting, ball.speed_starting )
+    else
+        ball:setPosition( love.graphics.getWidth()/2 + ball.size/2, love.graphics.getHeight()/2 - ball.size/2 )
+        ball:setSpeed( -ball.speed_starting, ball.speed_starting )
+    end
 end
