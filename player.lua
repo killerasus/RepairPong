@@ -22,7 +22,7 @@ function Player:new( )
 				repair = "x"
 			}
 		},
-		speed = 250,
+		speed = 275,
 		health = 100,
 		repair_timer = 0,
 		repair_delay = 2, -- in seconds
@@ -80,6 +80,7 @@ function Player:update( dt )
 	x, y = self:getPosition()
 
 	if not self.repair_in_cooldown then
+		
 		if self.health > 75 then
 			self:setColor( Colors.Green )
 		elseif (self.health < 75 and self.health > 35) then
@@ -87,6 +88,14 @@ function Player:update( dt )
 		else
 			self:setColor( Colors.Red )
 		end
+
+		if love.keyboard.isDown(self.control.keyboard.up) then
+			y = y - self.speed*dt
+	    end
+	    
+	    if love.keyboard.isDown(self.control.keyboard.down) then
+	    	y = y + self.speed*dt
+	    end
 	end
 
 	-- For testing cooldown mechanic
@@ -104,14 +113,6 @@ function Player:update( dt )
 	if love.keyboard.isDown(self.control.keyboard.repair) and not self.repair_in_cooldown then
 		self:repair()
 	end
-
-	if love.keyboard.isDown(self.control.keyboard.up) then
-		y = y - self.speed*dt
-    end
-    
-    if love.keyboard.isDown(self.control.keyboard.down) then
-    	y = y + self.speed*dt
-    end
     
     -- Check for boundaries
     if y < 0 then
