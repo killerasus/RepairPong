@@ -10,10 +10,11 @@ function Ball:new( )
 		x = 0,
 		y = 0,
 		speed = {
-			x = 100,
-			y = 100
+			x = 300,
+			y = 300
 		},
-		speed_increment = 15,
+		speed_increment = 25,
+		speed_limit = 500,
 		size = 16, -- pixels
 		color = Colors.Green -- r, g, b, a
 	}
