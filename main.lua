@@ -2,16 +2,23 @@
 require "ball"
 require "player"
 
--- State machine
+-- State machines
+
 State = 0 
--- 0 -- Menu
--- 1 -- Game
--- 2 -- Game Over
--- 3 -- Creditos
+
+GameStates = {
+    Menu = 0,
+    Game = 1,
+    GameOver = 2,
+    Credits = 3
+}
 
 MenuState = 0
--- 0 -- Play
--- 1 -- Credits
+
+MenuStates = {
+    Play = 0,
+    Credits = 1
+}
 
 
 function love.load()
@@ -20,26 +27,26 @@ function love.load()
 end
 
 function love.draw()
-    if (State == 0) then
+    if (State == GameStates.Menu) then
         drawMenu()
-    elseif (State == 1) then
+    elseif (State == GameStates.Game) then
         drawGame()
-    elseif (State == 2) then
+    elseif (State == GameStates.GameOver) then
         -- drawGameOver()
-    elseif (State == 3) then
+    elseif (State == GameStates.Credits) then
         drawCredits()
     end
 end
 
 function love.update(dt)
-    if (State == 0) then
+    if (State == GameStates.Menu) then
         menuUpdate()
-    elseif (State == 1) then
+    elseif (State == GameStates.Game) then
         gameUpdate( dt )
-    elseif (State == 2) then
+    elseif (State == GameStates.GameOver) then
         -- gameOverUpdate(dt)
-    elseif (State == 3) then
-        -- creditsUpdate(dt))
+    elseif (State == GameStates.Credits) then
+        -- creditsUpdate(dt) -- Unnecessary
     end
 end
 
@@ -114,16 +121,16 @@ function setBallInGame( )
 end
 
 function menuUpdate( )
-    if(MenuState == 0) then
+    if(MenuState == MenuStates.Play) then
         if love.keyboard.isDown("down") then
-            MenuState = 1
+            MenuState = MenuStates.Credits
         elseif love.keyboard.isDown("return") then
             unloadMenu()
             loadGame()
         end
-    elseif(MenuState == 1) then
+    elseif(MenuState == MenuStates.Credits) then
         if love.keyboard.isDown("up") then
-            MenuState = 0
+            MenuState = MenuStates.Play
         elseif love.keyboard.isDown("return") then
             unloadMenu()
             loadCredits()
@@ -137,14 +144,14 @@ function drawMenu( )
 
     local color = {}
 
-    if(MenuState == 0) then
+    if(MenuState == MenuStates.Play) then
         color = Colors.Orange
     else
         color = Colors.SmokyGray
     end
     love.graphics.print({color, "Play"}, 0, 30, 0, 1)
 
-    if(MenuState == 1) then
+    if(MenuState == MenuStates.Credits) then
         color = Colors.Orange
     else
         color = Colors.SmokyGray
@@ -180,11 +187,11 @@ function gameUpdate( dt )
 end
 
 function unloadMenu( )
-    MenuState = 0
+    MenuState = MenuStates.Play
 end
 
 function loadGame( )
-    State = 1
+    State = GameStates.Game
 
     -- Declare actors
     player1 = Player:new()
@@ -205,35 +212,36 @@ function loadGame( )
 end
 
 function unloadGame( )
-    State = 0
+    State = GameStates.Menu
 end
 
 function love.keyreleased(key)
     if key == "escape" then
-        if (State == 0) then
+        if (State == GameStates.Menu) then
             love.event.quit()
-        elseif (State == 1) then
+        elseif (State == GameStates.Game) then
             unloadGame()
-        elseif (State == 3) then
+        elseif (State == GameStates.Credits) then
             unloadCredits()
         end
    end
 end
 
 function loadCredits( )
-    State = 3
+    State = GameStates.Credits
 end
 
 function unloadCredits( )
-    State = 0
+    State = GameStates.Menu
 end
 
 function drawCredits( )
     love.graphics.setColor(Colors.White)
     love.graphics.print("Repair Pong", 0, 0, 0, 1)
     love.graphics.print("Global Game Jam 2020 - PUC-Rio - Rio de Janeiro, Brazil", 0, 30, 0, 1)
-    love.graphics.print("Programmer and game designer - Bruno Baère", 0, 60, 0, 1)
-    love.graphics.print({Colors.White, "Icon is a derivative work of ", Colors.Green, "Freepik", Colors.White, " (",
+    love.graphics.print({Colors.White, "Programmer and game designer - ", Colors.Green, "Bruno Baère", Colors.White,
+        " (", Colors.Blue, "https://killerasus.github.io", Colors.White, ")"}, 0, 60, 0, 1)
+    love.graphics.print({Colors.White, "Repair Pong icon is a derivative work of ", Colors.Green, "Freepik", Colors.White, " (",
         Colors.Blue, "https://www.flaticon.com/authors/freepik", Colors.White, ") from ", Colors.Green,
         "Flaticon", Colors.White, " (", Colors.Blue, "https://www.flaticon.com/", Colors.White, ")"}, 0, 90, 0, 1)
 end
