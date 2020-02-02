@@ -139,8 +139,12 @@ function menuUpdate( )
 end
 
 function drawMenu( )
+
+    local starting_y_pos = 80
+
     love.graphics.setColor(Colors.White)
-    love.graphics.print("Repair Pong", 0, 0, 0, 1)
+    love.graphics.printf({Colors.Green, "R", Colors.Yellow, "E", Colors.Red, "P", Colors.Gray, "A",
+        Colors.Purple, "I", Colors.Orange, "R", Colors.White, " Pong"}, 110, starting_y_pos, 200, "center", 0, 3)
 
     local color = {}
 
@@ -149,14 +153,20 @@ function drawMenu( )
     else
         color = Colors.SmokyGray
     end
-    love.graphics.print({color, "Play"}, 0, 30, 0, 1)
+    love.graphics.printf({color, "Play"}, 200, starting_y_pos + 80, 200, "center", 0, 2)
 
     if(MenuState == MenuStates.Credits) then
         color = Colors.Orange
     else
         color = Colors.SmokyGray
     end
-    love.graphics.print({color, "Credits"}, 0, 60, 0, 1)
+
+    love.graphics.printf({color, "Credits"}, 200, starting_y_pos + 120, 200, "center", 0, 2)
+
+    love.graphics.printf("How to play:", 300, 300, 200, "center")
+    love.graphics.print("Player 1\n\nMove up - W\nMove down - S\nRepair paddle - X", 40, 330, 0, 1)
+    love.graphics.print("Player 2\n\nMove up - I\nMove down - K\nRepair paddle - M", 650, 330, 0, 1)
+    love.graphics.print("New ball - Spacebar", 40, 430, 0, 1)
 end
 
 function drawGame( )
@@ -283,9 +293,10 @@ function drawCredits( )
     love.graphics.setColor(Colors.White)
     love.graphics.print("Repair Pong", 0, 0, 0, 1)
     love.graphics.print("Global Game Jam 2020 - PUC-Rio - Rio de Janeiro, Brazil", 0, 30, 0, 1)
-    love.graphics.print({Colors.White, "Programmer and game designer - ", Colors.Green, "Bruno Baère", Colors.White,
+    love.graphics.print({Colors.White, "Programmer and game designer:\n", Colors.Green, "Bruno Baère", Colors.White,
         " (", Colors.Blue, "https://killerasus.github.io", Colors.White, ")"}, 0, 60, 0, 1)
+    love.graphics.print("Thanks:\nTo all participants of the GGJ 2020 PUC-Rio jam site. It was an awesome experience!", 0, 100, 0, 1)
     love.graphics.print({Colors.White, "Repair Pong icon is a derivative work of ", Colors.Green, "Freepik", Colors.White, " (",
         Colors.Blue, "https://www.flaticon.com/authors/freepik", Colors.White, ") from ", Colors.Green,
-        "Flaticon", Colors.White, " (", Colors.Blue, "https://www.flaticon.com/", Colors.White, ")"}, 0, 90, 0, 1)
+        "Flaticon", Colors.White, " (", Colors.Blue, "https://www.flaticon.com/", Colors.White, ")"}, 0, 180, 0, 1)
 end

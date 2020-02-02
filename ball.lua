@@ -14,7 +14,7 @@ function Ball:new( )
 			y = 300
 		},
 		speed_starting = 300,
-		speed_increment = 25,
+		speed_increment = 50,
 		speed_limit = 500,
 		size = 16, -- pixels
 		color = Colors.Green -- r, g, b, a
