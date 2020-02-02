@@ -71,6 +71,10 @@ function Player:setColor( t )
 	self.color = t;
 end
 
+function Player:getColor( )
+	return self.color
+end
+
 function Player:draw( )
 	love.graphics.setColor( self.color )
 	love.graphics.rectangle( 'fill', self.paddle.position.x, self.paddle.position.y, self.paddle.width, self.paddle.height)
@@ -131,4 +135,12 @@ end
 
 function Player:applyDamage( dmg )
 	self.health = self.health - dmg
+end
+
+function Player:getHealth( )
+	return self.health
+end
+
+function Player:getScore( )
+	return self.score
 end

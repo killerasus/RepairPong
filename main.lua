@@ -9,8 +9,7 @@ State = 0
 GameStates = {
     Menu = 0,
     Game = 1,
-    GameOver = 2,
-    Credits = 3
+    Credits = 2
 }
 
 MenuState = 0
@@ -19,6 +18,11 @@ MenuStates = {
     Play = 0,
     Credits = 1
 }
+
+-- Game Over
+GameOver = false
+Goals = 5
+VictoriousPlayer = "No one"
 
 
 function love.load()
@@ -31,8 +35,6 @@ function love.draw()
         drawMenu()
     elseif (State == GameStates.Game) then
         drawGame()
-    elseif (State == GameStates.GameOver) then
-        -- drawGameOver()
     elseif (State == GameStates.Credits) then
         drawCredits()
     end
@@ -43,8 +45,6 @@ function love.update(dt)
         menuUpdate()
     elseif (State == GameStates.Game) then
         gameUpdate( dt )
-    elseif (State == GameStates.GameOver) then
-        -- gameOverUpdate(dt)
     elseif (State == GameStates.Credits) then
         -- creditsUpdate(dt) -- Unnecessary
     end
@@ -76,7 +76,7 @@ function checkBallWallCollision( )
         next_player_1 = false
     end
 
-    if (ball) then        
+    if (ball) then
         ball:setPosition(x, y)
         ball:setSpeed(speed_x, speed_y)
     end
@@ -168,22 +168,66 @@ function drawGame( )
     if (ball) then
        ball:draw()
     end
+
+    if (GameOver) then
+        drawVictorious()
+    end
+end
+
+function drawVictorious()
+    local color = {}
+    if VictoriousPlayer == "Player 1" then
+        color = player1:getColor()
+    else
+        color = player2:getColor()
+    end
+
+    love.graphics.setColor( Colors.Purple )
+    local rect_w, rect_h = 240, 60
+    love.graphics.rectangle( "fill", love.graphics.getWidth()/2 - rect_w/2,
+        love.graphics.getHeight()/2 - rect_h/2, rect_w, rect_h )
+
+    love.graphics.setColor( Colors.White )
+    love.graphics.printf( {color, VictoriousPlayer, Colors.White, " is victorious!"},
+        love.graphics.getWidth()/2 - rect_w/2 + 15, love.graphics.getHeight()/2 - rect_h/2 + 20, 200, "center" )
 end
 
 function gameUpdate( dt )
-    player1:update( dt )
-    player2:update( dt )
-    
-    if (ball) then
-        ball:update( dt )
-        ball:checkPlayerCollision( player1 )
-        ball:checkPlayerCollision( player2 )
-        checkBallWallCollision( )
+    local gameover = checkVictoryCondition( )
+
+    if not gameover then
+        player1:update( dt )
+        player2:update( dt )
+
+        if (ball) then
+            ball:update( dt )
+            ball:checkPlayerCollision( player1 )
+            ball:checkPlayerCollision( player2 )
+            checkBallWallCollision( )
+        else
+            if love.keyboard.isDown("space") then
+                setBallInGame()
+            end
+        end
     else
-        if love.keyboard.isDown("space") then
-            setBallInGame()
+        -- Just don't get any input
+    end
+end
+
+function checkVictoryCondition( )
+    local player1_dead = (player1:getHealth() <= 0) or (player2:getScore() == Goals)
+    local player2_dead = (player2:getHealth() <= 0) or (player1:getScore() == Goals)
+    GameOver = player1_dead or player2_dead
+
+    if GameOver then
+        if player1_dead then
+            VictoriousPlayer = "Player 2"
+        else
+            VictoriousPlayer = "Player 1"
         end
     end
+
+    return GameOver
 end
 
 function unloadMenu( )
@@ -192,6 +236,7 @@ end
 
 function loadGame( )
     State = GameStates.Game
+    GameOver = false
 
     player1 = Player:new()
     player2 = Player:new()
