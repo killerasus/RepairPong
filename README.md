@@ -7,18 +7,14 @@ Like Pong, but your racket starts cracking from repeatedly blocking the ball. Yo
 ## How to play
 Currently the game is played by two players on the same keyboard.
 
-'escape' - Exits current game to menu, and when in the menu, quits the program.
-'spacebar' - Releases a new ball after a goal is made
+`escape` - Exits current game to menu, and when in the menu, quits the program.
+`spacebar` - Releases a new ball after a goal is made
 
-### Player 1 (Left side)
-'w' - Move up
-'s' - Move down
-'x' - Repair paddle
-
-### Player 2 (Right side)
-'i' - Move up
-'k' - Move down
-'m' - Repair paddle
+| Command       | Player 1 (Left Side) | Player 2 (Right Side)  |
+| ------------- |:--------------------:|:----------------------:|
+| Move Up       | `w`                  | `i`                    |
+| Move Down     | `s`                  | `k`                    |
+| Repair Paddle | `x`                  | `m`                    |
 
 ## Credits
-Icon is a derivative work of [Freepik](https://www.flaticon.com/authors/freepik) from [Flaticon](https://www.flaticon.com/).
+Repair Pong icon is a derivative work of [Freepik](https://www.flaticon.com/authors/freepik) from [Flaticon](https://www.flaticon.com/).
