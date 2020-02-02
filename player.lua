@@ -22,7 +22,7 @@ function Player:new( )
 				repair = "x"
 			}
 		},
-		speed = 275,
+		speed = 350,
 		health = 100,
 		repair_timer = 0,
 		repair_delay = 2, -- in seconds
@@ -77,10 +77,9 @@ function Player:draw( )
 end
 
 function Player:update( dt )
-	x, y = self:getPosition()
+	local x, y = self:getPosition()
 
 	if not self.repair_in_cooldown then
-		
 		if self.health > 75 then
 			self:setColor( Colors.Green )
 		elseif (self.health < 75 and self.health > 35) then

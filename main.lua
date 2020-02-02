@@ -4,7 +4,7 @@ require "player"
 
 -- State machines
 
-State = 0 
+State = 0
 
 GameStates = {
     Menu = 0,
@@ -51,8 +51,8 @@ function love.update(dt)
 end
 
 function checkBallWallCollision( )
-	x, y = ball:getPosition()
-	speed_x, speed_y = ball:getSpeed()
+	local x, y = ball:getPosition()
+	local speed_x, speed_y = ball:getSpeed()
 	if ball.y < 0 then -- Upper wall collision
         y = 0
         speed_y = -speed_y
@@ -110,7 +110,7 @@ function setBallInGame( )
         local _, height = player1:getDimensions()
         y = y + height/2
         ball:setPosition( love.graphics.getWidth()/2 - ball.size/2, y - ball.size/2)
-        ball:setSpeed( ball.speed_starting, ball.speed_starting )
+        ball:setSpeed( ball.speed_starting*math.random(0.9, 1.4), ball.speed_starting*math.random(0.9, 1.4) )
     else
         local _, y = player2:getPosition()
         local _, height = player2:getDimensions()
@@ -193,7 +193,6 @@ end
 function loadGame( )
     State = GameStates.Game
 
-    -- Declare actors
     player1 = Player:new()
     player2 = Player:new()
     ball = nil
