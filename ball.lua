@@ -13,9 +13,9 @@ function Ball:new( )
 			x = 300,
 			y = 300
 		},
-		speed_starting = 300,
-		speed_increment = 50,
-		speed_limit = 500,
+		speed_starting = 300, -- pixels per second
+		speed_increment = 50, -- pixels per second
+		speed_limit = 500, -- pixels per second
 		size = 16, -- pixels
 		color = Colors.Green -- r, g, b, a
 	}
@@ -33,8 +33,8 @@ function Ball:getPosition( )
 end
 
 function Ball:setSpeed( x, y )
-	self.speed.x = x
-	self.speed.y = y
+	self.speed.x = x > self.speed_limit and self.speed_limit or x
+	self.speed.y = y > self.speed_limit and self.speed_limit or y
 end
 
 function Ball:getSpeed( )
