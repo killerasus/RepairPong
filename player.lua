@@ -22,7 +22,7 @@ function Player:new( )
 				repair = "x"
 			}
 		},
-		speed = 600,
+		speed = 600, -- pixels per second
 		health = 100,
 		repair_timer = 0,
 		repair_delay = 2, -- in seconds
