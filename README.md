@@ -7,7 +7,7 @@ Like Pong, but your racket starts cracking from repeatedly blocking the ball. Yo
 ## How to play
 Currently the game is played by two players on the same keyboard.
 
-`escape` - Exits current game to menu, and when in the menu, quits the program.
+`escape` - Exits current game to menu, and when in the menu, quits the program.<br/>
 `spacebar` - Releases a new ball after a goal is made
 
 | Command       | Player 1 (Left Side) | Player 2 (Right Side)  |
